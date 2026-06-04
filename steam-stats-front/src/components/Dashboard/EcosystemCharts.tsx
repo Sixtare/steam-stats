@@ -3,7 +3,7 @@
 import { DonutChart, donutColorMap } from "./DonutChart";
 import { BarList } from "./BarList";
 
-export function EcosystemCharts({ genreEcosystem, titanHours, totalPlaytimeHours }: { genreEcosystem: any, titanHours: any, totalPlaytimeHours?: number }) {
+export function EcosystemCharts({ genreEcosystem, titanHours }: { genreEcosystem: any, titanHours: any }) {
   return (
     <section className="grid grid-cols-1 xl:grid-cols-2 gap-5">
       {/* Genre Distribution (Pie Chart using Tremor) */}
@@ -52,12 +52,12 @@ export function EcosystemCharts({ genreEcosystem, titanHours, totalPlaytimeHours
           <span className="font-label-code text-xs text-on-surface-variant">LIFETIME ENGAGEMENT</span>
         </div>
         <div className="flex-1">
-          <BarList 
-            data={titanHours} 
-            className="mt-4" 
+          <BarList
+            data={titanHours}
+            className="mt-4"
             showAnimation={true}
             valueFormatter={(val) => `${val} HRS`}
-            maxValue={totalPlaytimeHours}
+            maxValue={titanHours[0]?.value ?? 0}
           />
         </div>
       </div>

@@ -33,7 +33,6 @@ export function DashboardView({
         <EcosystemCharts
           genreEcosystem={data.genreEcosystem}
           titanHours={data.titanHours}
-          totalPlaytimeHours={data.stats.totalPlaytimeRaw}
         />
       </div>
 
