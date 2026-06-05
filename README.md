@@ -97,4 +97,4 @@ O frontend será iniciado em `http://localhost:3000`.
 
 ## Licença
 
-Distribuído sob a licença MIT. Veja `LICENSE` para mais informações.
+Distribuído sob a licença MIT.
