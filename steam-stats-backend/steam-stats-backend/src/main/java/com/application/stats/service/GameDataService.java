@@ -1,5 +1,6 @@
 package com.application.stats.service;
 
+import com.application.stats.dtos.GameDataRecord;
 import com.application.stats.dtos.GameDataWrap;
 import com.application.stats.entity.GameData;
 import com.application.stats.repository.GameDataRepository;
@@ -29,7 +30,16 @@ public class GameDataService {
             .filter(s -> !s.isEmpty())
             .map(Long::parseLong)
             .toList();
-        return new GameDataWrap(null, getOwnedGamesData(idList));
+
+        List<GameData> gameDataList = getOwnedGamesData(idList);
+        Map<String, Integer> aggregatedTags = aggregateTags(gameDataList);
+        removeCommonTags(aggregatedTags);
+
+        List<GameDataRecord> gameDataRecords = gameDataList.stream()
+            .map(GameDataRecord::new)
+            .toList();
+
+        return new GameDataWrap(aggregatedTags, null, gameDataRecords);
     }
 
     @Transactional(readOnly = true)
@@ -92,14 +102,26 @@ public class GameDataService {
         return missingDataList;
     }
 
-    public void removeCommonTags(Map<String, Integer> t1, Map<String, Integer> t2) {
+    public void removeCommonTags(Map<String, Integer> tags) {
         Set<String> common = Set.of(
             "Singleplayer", "Multiplayer", "Co-op", "Online Co-Op", "Local Co-Op",
             "Free to Play", "Soundtrack", "Great Soundtrack", "Atmospheric"
         );
 
-        t1.keySet().removeAll(common);
-        t2.keySet().removeAll(common);
+        tags.keySet().removeAll(common);
+    }
+
+    public Map<String, Integer> aggregateTags(List<GameData> games) {
+        Map<String, Integer> map = new HashMap<>();
+        if (games == null) return map;
+        for (GameData g : games) {
+            List<String> tags = g.getTags();
+            if (tags == null) continue;
+            for (String t : tags) {
+                map.merge(t, 1, Integer::sum);
+            }
+        }
+        return map;
     }
 
     public void populateDatabase() {

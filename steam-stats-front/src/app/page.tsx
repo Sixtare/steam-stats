@@ -143,17 +143,7 @@ export default function Home() {
 
               totalAccountValue = `$${(gameDataResponse.total_price || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
-              // Aggregate all tags for charts
-              const tagCounts: Record<string, number> = {};
-              gameDataList.forEach((g: any) => {
-                if (Array.isArray(g.tags)) {
-                  g.tags.forEach((tag: string) => {
-                      tagCounts[tag] = (tagCounts[tag] || 0) + 1;
-                  });
-                }
-              });
-
-              const allTags = Object.entries(tagCounts).sort(([, a], [, b]) => b - a);
+              const allTags = Object.entries(gameDataResponse.aggregated_tags || {}).sort(([, a], [, b]) => b - a);
 
               const colorPalette = ["blue-400", "purple-400", "cyan-500", "indigo-500", "sky-500", "slate-400"];
               topTags = allTags.slice(0, 10).map(([name, value], i) => ({

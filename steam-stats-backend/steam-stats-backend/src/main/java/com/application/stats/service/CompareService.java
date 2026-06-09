@@ -50,9 +50,10 @@ public class CompareService {
         List<GameData> gd2 = gameDataService.getOwnedGamesData(new ArrayList<>(ids2));
 
         //cosine e top tags
-        Map<String, Integer> t1 = aggregateTags(gd1);
-        Map<String, Integer> t2 = aggregateTags(gd2);
-        gameDataService.removeCommonTags(t1, t2);
+        Map<String, Integer> t1 = gameDataService.aggregateTags(gd1);
+        Map<String, Integer> t2 = gameDataService.aggregateTags(gd2);
+        gameDataService.removeCommonTags(t1);
+        gameDataService.removeCommonTags(t2);
 
         //intersection
         Set<Long> intersection = new HashSet<>(ids1);
@@ -101,9 +102,10 @@ public class CompareService {
     }
 
     private double calculateCosineSimilarity(List<GameData> p1, List<GameData> p2) {
-        Map<String, Integer> t1 = aggregateTags(p1);
-        Map<String, Integer> t2 = aggregateTags(p2);
-        gameDataService.removeCommonTags(t1, t2);
+        Map<String, Integer> t1 = gameDataService.aggregateTags(p1);
+        Map<String, Integer> t2 = gameDataService.aggregateTags(p2);
+        gameDataService.removeCommonTags(t1);
+        gameDataService.removeCommonTags(t2);
 
         if (t1.isEmpty() || t2.isEmpty()) return 0.0;
 
@@ -155,17 +157,6 @@ public class CompareService {
         return BigDecimal.valueOf(value).setScale(2, RoundingMode.HALF_UP);
     }
 
-    private Map<String, Integer> aggregateTags(List<GameData> games) {
-        Map<String, Integer> map = new HashMap<>();
-        if (games == null) return map;
-        for (GameData g : games) {
-            List<String> tags = g.getTags();
-            if (tags == null) continue;
-            for (String t : tags) {
-                map.merge(t, 1, Integer::sum);
-            }
-        }
-        return map;
-    }
+
 }
 
