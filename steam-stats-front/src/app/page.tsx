@@ -92,7 +92,7 @@ export default function Home() {
         throw new Error(json.error || "Player profile is not public.");
       }
 
-            const gamesRes = await fetch(`/api/stats/gamelist?id=${id}`);
+      const gamesRes = await fetch(`/api/stats/gamelist?id=${id}`);
       const lastPlayedRes = await fetch(`/api/stats/lastplayed?id=${id}`);
 
       let gamesList: any = [];
@@ -143,7 +143,7 @@ export default function Home() {
 
               totalAccountValue = `$${(gameDataResponse.total_price || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
-              const allTags = Object.entries(gameDataResponse.aggregated_tags || {}).sort(([, a], [, b]) => b - a);
+              const allTags = (Object.entries(gameDataResponse.aggregated_tags || {}) as [string, number][]).sort(([, a], [, b]) => b - a);
 
               const colorPalette = ["blue-400", "purple-400", "cyan-500", "indigo-500", "sky-500", "slate-400"];
               topTags = allTags.slice(0, 10).map(([name, value], i) => ({
