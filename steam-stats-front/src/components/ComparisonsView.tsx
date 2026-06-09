@@ -77,13 +77,13 @@ export function ComparisonsView({
         throw new Error(errorMsg);
       }
       try { gamesList = await gamesRes.json(); } catch { throw new Error("Player profile is not public."); }
-      if (!Array.isArray(gamesList)) {
+      if (!gamesList || typeof gamesList !== "object" || !Array.isArray(gamesList.games)) {
         if (gamesList && typeof gamesList === "object" && "error" in gamesList) {
           throw new Error(gamesList.error || "Player profile is not public.");
         }
         throw new Error("Player profile is not public.");
       }
-      if (gamesList.length === 0) {
+      if (gamesList.games.length === 0) {
         throw new Error("Player profile is not public.");
       }
 
@@ -98,7 +98,7 @@ export function ComparisonsView({
           level: pJson.player_level ?? pJson.level ?? 0,
           avatar: pJson.avatarfull || "",
         },
-        totalGames: Array.isArray(gamesList) ? gamesList.length : 0,
+        totalGames: gamesList.game_count || gamesList.games.length,
       });
       setCompareData(compareJson);
     } catch (error) {

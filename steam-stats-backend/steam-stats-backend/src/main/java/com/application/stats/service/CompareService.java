@@ -1,9 +1,6 @@
 package com.application.stats.service;
 
-import com.application.stats.dtos.CompareHours;
-import com.application.stats.dtos.CompareTags;
-import com.application.stats.dtos.Games;
-import com.application.stats.dtos.ComparisonStats;
+import com.application.stats.dtos.*;
 import com.application.stats.entity.GameData;
 import org.springframework.stereotype.Service;
 
@@ -27,18 +24,6 @@ public class CompareService {
         return games.stream().mapToInt(Games::playtime_forever).sum()/60;
     }
 
-
-    private Float getTotalPrice(List<Games> games) {
-        double priceDouble = gameDataService.getOwnedGamesData(games.stream().map(Games::appid).toList())
-            .stream()
-            .map(GameData::getPrice)
-            .filter(Objects::nonNull)
-            .mapToDouble(Float::doubleValue)
-            .sum();
-
-        return (float) priceDouble;
-    }
-
     public ComparisonStats comparePlayers(Long id1, Long id2) {
         List<Games> games1 = List.of(playerService.getPlayerGames(id1).games());
         List<Games> games2 = List.of(playerService.getPlayerGames(id2).games());
@@ -46,14 +31,8 @@ public class CompareService {
         Set<Long> ids1 = games1.stream().map(Games::appid).collect(Collectors.toSet());
         Set<Long> ids2 = games2.stream().map(Games::appid).collect(Collectors.toSet());
 
-        List<GameData> gd1 = gameDataService.getOwnedGamesData(new ArrayList<>(ids1));
-        List<GameData> gd2 = gameDataService.getOwnedGamesData(new ArrayList<>(ids2));
-
-        //cosine e top tags
-        Map<String, Integer> t1 = gameDataService.aggregateTags(gd1);
-        Map<String, Integer> t2 = gameDataService.aggregateTags(gd2);
-        gameDataService.removeCommonTags(t1);
-        gameDataService.removeCommonTags(t2);
+        GameDataWrap gd1 = gameDataService.getOwnedGamesData(ids1.stream().toList());
+        GameDataWrap gd2 = gameDataService.getOwnedGamesData(ids2.stream().toList());
 
         //intersection
         Set<Long> intersection = new HashSet<>(ids1);
@@ -62,12 +41,11 @@ public class CompareService {
         int commonGames = intersection.size();
         double cosine = calculateCosineSimilarity(gd1, gd2);
 
-        List <CompareTags> topTagsOverlap = getTopTags(games1.size(), games2.size(), t1, t2);
+        List <CompareTags> topTagsOverlap = getTopTags(games1.size(), games2.size(), gd1.aggregated_tags(), gd2.aggregated_tags());
 
         //player2 info
-        //todo remove player2totalhours and totalprice later since theyll be added in the body from gameswrap and gamedatawrap
         Integer player2TotalHours = getTotalPlaytime(games2);
-        Float totalPrice = getTotalPrice(games2);
+        Float totalPrice = gd2.total_price();
 
         List<CompareHours> compareHours = getTopCommonGames(games1, games2, ids2);
 
@@ -101,22 +79,20 @@ public class CompareService {
         return compareHours;
     }
 
-    private double calculateCosineSimilarity(List<GameData> p1, List<GameData> p2) {
-        Map<String, Integer> t1 = gameDataService.aggregateTags(p1);
-        Map<String, Integer> t2 = gameDataService.aggregateTags(p2);
-        gameDataService.removeCommonTags(t1);
-        gameDataService.removeCommonTags(t2);
+    private double calculateCosineSimilarity(GameDataWrap player1, GameDataWrap player2) {
+        Map<String, Integer> tags1 = player1.aggregated_tags();
+        Map<String, Integer> tags2 = player2.aggregated_tags();
 
-        if (t1.isEmpty() || t2.isEmpty()) return 0.0;
+        if (tags1.isEmpty() || tags2.isEmpty()) return 0.0;
 
         Set<String> all = new HashSet<>();
-        all.addAll(t1.keySet());
-        all.addAll(t2.keySet());
+        all.addAll(tags1.keySet());
+        all.addAll(tags2.keySet());
 
         double dot = 0.0, mag1 = 0.0, mag2 = 0.0;
         for (String tag : all) {
-            int w1 = t1.getOrDefault(tag, 0);
-            int w2 = t2.getOrDefault(tag, 0);
+            int w1 = tags1.getOrDefault(tag, 0);
+            int w2 = tags2.getOrDefault(tag, 0);
             dot += (double) w1 * w2;
             mag1 += Math.pow(w1, 2);
             mag2 += Math.pow(w2, 2);
@@ -156,7 +132,5 @@ public class CompareService {
     private BigDecimal round2(float value) {
         return BigDecimal.valueOf(value).setScale(2, RoundingMode.HALF_UP);
     }
-
-
 }
 

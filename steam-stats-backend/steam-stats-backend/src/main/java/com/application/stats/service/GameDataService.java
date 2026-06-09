@@ -31,19 +31,11 @@ public class GameDataService {
             .map(Long::parseLong)
             .toList();
 
-        List<GameData> gameDataList = getOwnedGamesData(idList);
-        Map<String, Integer> aggregatedTags = aggregateTags(gameDataList);
-        removeCommonTags(aggregatedTags);
-
-        List<GameDataRecord> gameDataRecords = gameDataList.stream()
-            .map(GameDataRecord::new)
-            .toList();
-
-        return new GameDataWrap(aggregatedTags, null, gameDataRecords);
+        return getOwnedGamesData(idList);
     }
 
     @Transactional(readOnly = true)
-    public List<GameData> getOwnedGamesData(List<Long> ids){
+    public GameDataWrap getOwnedGamesData(List<Long> ids){
         List<GameData> gameDataList = gameDataRepository.findAllByIdWithTags(ids);
 
         Set<Long> existingIds = gameDataList.stream()
@@ -57,7 +49,15 @@ public class GameDataService {
             List<GameData> missingGameData = getMissingGameData(missingIds.stream().toList());
             gameDataList.addAll(missingGameData);
         }
-        return gameDataList;
+
+        Map<String, Integer> aggregatedTags = aggregateTags(gameDataList);
+        removeCommonTags(aggregatedTags);
+
+        List<GameDataRecord> gameDataRecords = gameDataList.stream()
+            .map(GameDataRecord::new)
+            .toList();
+
+        return new GameDataWrap(aggregatedTags, null, gameDataRecords);
     }
 
     public List<GameData> getMissingGameData(List<Long> missingIds) {
