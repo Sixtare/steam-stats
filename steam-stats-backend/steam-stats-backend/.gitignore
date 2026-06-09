@@ -28,3 +28,4 @@ build/
 /steam-stats-backend/src/test/
 /src/main/resources/application.properties
 /.gitattributes
+games.json

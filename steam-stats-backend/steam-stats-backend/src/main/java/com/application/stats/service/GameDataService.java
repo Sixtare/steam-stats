@@ -91,6 +91,16 @@ public class GameDataService {
         return missingDataList;
     }
 
+    public void removeCommonTags(Map<String, Integer> t1, Map<String, Integer> t2) {
+        Set<String> common = Set.of(
+            "Singleplayer", "Multiplayer", "Co-op", "Online Co-Op", "Local Co-Op",
+            "Free to Play", "Soundtrack", "Great Soundtrack", "Atmospheric"
+        );
+
+        t1.keySet().removeAll(common);
+        t2.keySet().removeAll(common);
+    }
+
     public void populateDatabase() {
         try (InputStream inputStream = new ClassPathResource("games.json").getInputStream()) {
             ObjectMapper objectMapper = new ObjectMapper();

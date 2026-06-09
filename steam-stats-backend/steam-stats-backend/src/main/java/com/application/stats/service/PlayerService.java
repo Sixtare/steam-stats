@@ -1,6 +1,7 @@
 package com.application.stats.service;
 
 import com.application.stats.dtos.Games;
+import com.application.stats.dtos.GamesWrap;
 import com.application.stats.dtos.Player;
 import com.application.stats.dtos.SteamResponse;
 import com.application.stats.exception.NotFound;
@@ -88,7 +89,7 @@ public class PlayerService {
         return player;
     }
 
-    public Games[] getPlayerGames(Long id) {
+    public GamesWrap getPlayerGames(Long id) {
     RestClient restClient = RestClient.create();
     SteamResponse steamResponse = (restClient.get()
         .uri("https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key="+ apiKey +"&steamid="+ id +"&format=json&include_appinfo=true&include_played_free_games=true")
@@ -100,7 +101,7 @@ public class PlayerService {
 
         ObjectMapper mapper = new ObjectMapper();
         Object rawObject = steamResponse.response().data();
-        return mapper.convertValue(rawObject, Games[].class);
+        return new GamesWrap(null, null, mapper.convertValue(rawObject, Games[].class));
     }
 
     public Games[] getLastPlayedGames(Long id) {

@@ -142,14 +142,11 @@ export default function Home() {
               totalAccountValue = `$${totalPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
               // Aggregate all tags for charts
-              const ignoredTags = ["Singleplayer", "Multiplayer", "Single-player", "Multi-player"];
               const tagCounts: Record<string, number> = {};
               gameDataList.forEach((g: any) => {
                 if (Array.isArray(g.tags)) {
                   g.tags.forEach((tag: string) => {
-                    if (!ignoredTags.includes(tag)) {
                       tagCounts[tag] = (tagCounts[tag] || 0) + 1;
-                    }
                   });
                 }
               });

@@ -40,8 +40,8 @@ public class CompareService {
     }
 
     public ComparisonStats comparePlayers(Long id1, Long id2) {
-        List<Games> games1 = Arrays.stream(playerService.getPlayerGames(id1)).toList();
-        List<Games> games2 = Arrays.stream(playerService.getPlayerGames(id2)).toList();
+        List<Games> games1 = List.of(playerService.getPlayerGames(id1).games());
+        List<Games> games2 = List.of(playerService.getPlayerGames(id2).games());
 
         Set<Long> ids1 = games1.stream().map(Games::appid).collect(Collectors.toSet());
         Set<Long> ids2 = games2.stream().map(Games::appid).collect(Collectors.toSet());
@@ -52,7 +52,7 @@ public class CompareService {
         //cosine e top tags
         Map<String, Integer> t1 = aggregateTags(gd1);
         Map<String, Integer> t2 = aggregateTags(gd2);
-        removeCommonTags(t1, t2);
+        gameDataService.removeCommonTags(t1, t2);
 
         //intersection
         Set<Long> intersection = new HashSet<>(ids1);
@@ -102,7 +102,7 @@ public class CompareService {
     private double calculateCosineSimilarity(List<GameData> p1, List<GameData> p2) {
         Map<String, Integer> t1 = aggregateTags(p1);
         Map<String, Integer> t2 = aggregateTags(p2);
-        removeCommonTags(t1, t2);
+        gameDataService.removeCommonTags(t1, t2);
 
         if (t1.isEmpty() || t2.isEmpty()) return 0.0;
 
@@ -152,16 +152,6 @@ public class CompareService {
 
     private BigDecimal round2(float value) {
         return BigDecimal.valueOf(value).setScale(2, RoundingMode.HALF_UP);
-    }
-
-    private void removeCommonTags(Map<String, Integer> t1, Map<String, Integer> t2) {
-        Set<String> common = Set.of(
-            "Singleplayer", "Multiplayer", "Co-op", "Online Co-Op", "Local Co-Op",
-            "Free to Play", "Soundtrack", "Great Soundtrack", "Atmospheric"
-        );
-
-        t1.keySet().removeAll(common);
-        t2.keySet().removeAll(common);
     }
 
     private Map<String, Integer> aggregateTags(List<GameData> games) {
