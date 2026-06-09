@@ -1,5 +1,6 @@
 package com.application.stats.service;
 
+import com.application.stats.dtos.GameDataWrap;
 import com.application.stats.entity.GameData;
 import com.application.stats.repository.GameDataRepository;
 import org.springframework.core.io.ClassPathResource;
@@ -22,13 +23,13 @@ public class GameDataService {
         this.gameDataRepository = gameDataRepository;
     }
 
-    public List<GameData> getOwnedGamesData(String ids) {
+    public GameDataWrap getOwnedGamesData(String ids) {
         List<Long> idList = Arrays.stream(ids.split(","))
             .map(String::trim)
             .filter(s -> !s.isEmpty())
             .map(Long::parseLong)
             .toList();
-        return getOwnedGamesData(idList);
+        return new GameDataWrap(null, getOwnedGamesData(idList));
     }
 
     @Transactional(readOnly = true)

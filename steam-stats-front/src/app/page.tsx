@@ -102,19 +102,21 @@ export default function Home() {
         throw new Error(errorMsg);
       }
       try { gamesList = await gamesRes.json(); } catch { throw new Error("Player profile is not public."); }
-      if (!Array.isArray(gamesList)) {
+      if (!gamesList || typeof gamesList !== "object" || !Array.isArray(gamesList.games)) {
         if (gamesList && typeof gamesList === "object" && "error" in gamesList) {
           throw new Error(gamesList.error || "Player profile is not public.");
         }
         throw new Error("Player profile is not public.");
       }
-      if (gamesList.length === 0) {
+      if (gamesList.games.length === 0) {
         throw new Error("Player profile is not public.");
       }
       let lastPlayedList: any[] = [];
       try { lastPlayedList = lastPlayedRes.ok ? await lastPlayedRes.json() : []; } catch {}
 
-      const allGamesList = Array.isArray(gamesList) ? gamesList : [];
+      const allGamesList = gamesList.games;
+      const gameCount = gamesList.game_count;
+      const totalHours = gamesList.total_hours;
 
       // Fetch full game data (tags, prices, images) via /api/gamedata/{ids}
       let headerImages: Record<string, string> = {};
@@ -127,9 +129,11 @@ export default function Home() {
         if (appIds.length > 0) {
           const gameDataRes = await fetch(`/api/gamedata?ids=${appIds.join(',')}`);
           if (gameDataRes.ok) {
-            const gameDataList = await gameDataRes.json();
+            const gameDataResponse = await gameDataRes.json();
 
-            if (Array.isArray(gameDataList)) {
+            if (gameDataResponse && Array.isArray(gameDataResponse.gameData)) {
+              const gameDataList = gameDataResponse.gameData;
+
               // header_image map for LibrarySection
               gameDataList.forEach((g: any) => {
                 if (g.appid && g.header_image) {
@@ -137,9 +141,7 @@ export default function Home() {
                 }
               });
 
-              // Calculate total account price
-              const totalPrice = gameDataList.reduce((sum: number, g: any) => sum + (g.price || 0), 0);
-              totalAccountValue = `$${totalPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+              totalAccountValue = `$${(gameDataResponse.total_price || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
               // Aggregate all tags for charts
               const tagCounts: Record<string, number> = {};
@@ -179,8 +181,7 @@ export default function Home() {
           value: Math.round(g.playtime_forever / 60)
         }));
         
-      const totalPlaytimeHours = allGamesList.reduce((sum: number, g: any) => sum + (g.playtime_forever || 0), 0);
-      const totalPlaytimeHoursRounded = Math.round(totalPlaytimeHours / 60);
+      const totalPlaytimeHoursRounded = totalHours || 0;
         
       const recentGames = (Array.isArray(lastPlayedList) ? lastPlayedList : []).slice(0, 3).map((g: any) => ({
         name: g.name,
@@ -198,7 +199,7 @@ export default function Home() {
         stats: {
           totalPlaytime: totalPlaytimeHoursRounded.toLocaleString(),
           totalPlaytimeRaw: totalPlaytimeHoursRounded,
-          collection: (allGamesList.length || 0).toLocaleString(),
+          collection: (gameCount || 0).toLocaleString(),
           yearsOnSteam: json.timecreated ? Math.floor((Date.now() / 1000 - json.timecreated) / 31557600) : "?",
           accountValue: totalAccountValue
         },

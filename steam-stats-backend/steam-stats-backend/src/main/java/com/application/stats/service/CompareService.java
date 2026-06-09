@@ -64,6 +64,7 @@ public class CompareService {
         List <CompareTags> topTagsOverlap = getTopTags(games1.size(), games2.size(), t1, t2);
 
         //player2 info
+        //todo remove player2totalhours and totalprice later since theyll be added in the body from gameswrap and gamedatawrap
         Integer player2TotalHours = getTotalPlaytime(games2);
         Float totalPrice = getTotalPrice(games2);
 

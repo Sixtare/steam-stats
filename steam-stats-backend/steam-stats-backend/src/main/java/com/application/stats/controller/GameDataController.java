@@ -17,7 +17,7 @@ public class GameDataController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<GameData>> getOwnedGamesData(@RequestParam("ids") String ids){
+    public ResponseEntity<?> getOwnedGamesData(@RequestParam("ids") String ids){
         return ResponseEntity.ok(gameDataService.getOwnedGamesData(ids));
     }
 
