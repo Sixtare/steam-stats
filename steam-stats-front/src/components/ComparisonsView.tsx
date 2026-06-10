@@ -4,6 +4,8 @@ import { useState } from "react";
 import { ComparisonsDashboard } from "./Comparisons/ComparisonsDashboard";
 import { ComparisonForm } from "./Comparisons/ComparisonForm";
 
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "";
+
 export function ComparisonsView({
   profile,
   allGames,
@@ -31,7 +33,7 @@ export function ComparisonsView({
     setError("");
     try {
       // Validate input via backend first
-      const validateRes = await fetch(`/api/stats/validate?url=${encodeURIComponent(trimmed)}`);
+      const validateRes = await fetch(`${API_BASE}/api/stats/validate?url=${encodeURIComponent(trimmed)}`);
       if (!validateRes.ok) {
         throw new Error("Invalid Steam profile URL or ID.");
       }
@@ -41,7 +43,7 @@ export function ComparisonsView({
       if (!id) throw new Error("Could not resolve Steam ID.");
 
       // First fetch opponent profile to verify it exists and is not private
-      const profileRes = await fetch(`/api/stats?id=${id}`);
+      const profileRes = await fetch(`${API_BASE}/api/stats?id=${id}`);
 
       if (!profileRes.ok) {
         let errorMsg = "Invalid Steam profile URL or ID.";
@@ -66,8 +68,8 @@ export function ComparisonsView({
 
       // Only then fetch gamelist and compare data
       const [gamesRes, compareRes] = await Promise.all([
-        fetch(`/api/stats/gamelist?id=${id}`),
-        fetch(`/api/compare?id1=${hostSteamId}&id2=${id}`),
+        fetch(`${API_BASE}/api/stats/gamelist?id=${id}`),
+        fetch(`${API_BASE}/api/compare?id1=${hostSteamId}&id2=${id}`),
       ]);
 
       let gamesList: any = [];

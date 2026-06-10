@@ -8,6 +8,8 @@ import { DashboardView } from "../components/DashboardView";
 import { LibraryView } from "../components/LibraryView";
 import { ComparisonsView } from "../components/ComparisonsView";
 
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "";
+
 export default function Home() {
   const [steamIdInput, setSteamIdInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -58,7 +60,7 @@ export default function Home() {
     setComparisonResetKey(k => k + 1);
     try {
       // Validate input via backend first — resolves any URL or ID to a steam ID
-      const validateRes = await fetch(`/api/stats/validate?url=${encodeURIComponent(trimmed)}`);
+      const validateRes = await fetch(`${API_BASE}/api/stats/validate?url=${encodeURIComponent(trimmed)}`);
       if (!validateRes.ok) {
         throw new Error("Invalid Steam profile URL or ID.");
       }
@@ -69,7 +71,7 @@ export default function Home() {
       setHostSteamId(id);
 
       // First fetch the profile to verify it exists and is not private
-      const profileRes = await fetch(`/api/stats?id=${id}`);
+      const profileRes = await fetch(`${API_BASE}/api/stats?id=${id}`);
 
       if (!profileRes.ok) {
         let errorMsg = "An error occurred while fetching the profile.";
@@ -87,13 +89,12 @@ export default function Home() {
         throw new Error("Invalid Steam profile URL or ID.");
       }
 
-      // Se a API retornou um erro (perfil privado), para por aqui
       if (json && typeof json === "object" && "error" in json) {
         throw new Error(json.error || "Player profile is not public.");
       }
 
-      const gamesRes = await fetch(`/api/stats/gamelist?id=${id}`);
-      const lastPlayedRes = await fetch(`/api/stats/lastplayed?id=${id}`);
+      const gamesRes = await fetch(`${API_BASE}/api/stats/gamelist?id=${id}`);
+      const lastPlayedRes = await fetch(`${API_BASE}/api/stats/lastplayed?id=${id}`);
 
       let gamesList: any = [];
       if (!gamesRes.ok) {
@@ -127,7 +128,7 @@ export default function Home() {
       try {
         const appIds = allGamesList.map((g: any) => g.appid).filter(Boolean);
         if (appIds.length > 0) {
-          const gameDataRes = await fetch(`/api/gamedata?ids=${appIds.join(',')}`);
+          const gameDataRes = await fetch(`${API_BASE}/api/gamedata?ids=${appIds.join(',')}`);
           if (gameDataRes.ok) {
             const gameDataResponse = await gameDataRes.json();
 
