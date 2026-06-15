@@ -9,6 +9,7 @@
   [![Next.js](https://img.shields.io/badge/Next.js-16.2.6-000000?style=flat&logo=next.js)](https://nextjs.org/)
   [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=flat&logo=typescript)](https://www.typescriptlang.org/)
   [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?style=flat&logo=tailwindcss)](https://tailwindcss.com/)
+  [![Docker](https://img.shields.io/badge/Docker-%230db7ed.svg?style=flat&logo=docker&logoColor=white)](https://www.docker.com/)
 
 </div>
 
@@ -48,15 +49,41 @@
 - Gráfico de barras lado a lado por gênero
 - Comparação de horas nos jogos compartilhados
 
+### Backend & Arquitetura
+- **Documentação com Swagger:** Endpoints expostos de forma interativa para testes e documentação.
+- **CORS Configurável:** Configuração de CORS integrada para permitir deploy independente do frontend e backend.
+- **Containerização:** Dockerfile otimizado pronto para buildar o backend como container (ex: Google Cloud Run).
+
 ---
 
 ### APIs Externas
-- [Steam Web API](https://steamcommunity.com/dev) -- Dados de perfil, jogos, nível
-- [SteamSpy API](https://steamspy.com/) -- Tags e metadados dos jogos
-- [Steam Store API](https://wiki.teamfortress.com/wiki/User:RJackson/StorefrontAPI) -- Preços e imagens
+- [Steam Web API](https://steamcommunity.com/dev): Dados de perfil, jogos, nível
+- [SteamSpy API](https://steamspy.com/): Tags e metadados dos jogos
+- [Steam Store API](https://wiki.teamfortress.com/wiki/User:RJackson/StorefrontAPI): Preços e imagens
 
 ### Dataset de Seed
-- [Steam Games Dataset (Kaggle)](https://www.kaggle.com/datasets/fronkongames/steam-games-dataset) -- Utilizado para popular o banco de dados com metadados iniciais (preços, tags, imagens), contornando as limitações de taxa (rate limits) das APIs externas.
+- [Steam Games Dataset (Kaggle)](https://www.kaggle.com/datasets/fronkongames/steam-games-dataset): Utilizado para popular o banco de dados com metadados iniciais (preços, tags, imagens), contornando as limitações de taxa (rate limits) das APIs externas.
+
+---
+
+## Configuração (Variáveis de Ambiente)
+
+A aplicação pode ser configurada via variáveis de ambiente ou arquivos de configuração local:
+
+### Backend (`application.properties`)
+| Variável | Descrição | Padrão |
+| :--- | :--- | :--- |
+| `DB_URL` | URL de conexão com o PostgreSQL | `jdbc:postgresql://localhost:5432/postgres` |
+| `DB_USER` | Usuário do banco de dados | `postgres` |
+| `DB_PASS` | Senha do banco de dados | `1234` |
+| `STEAM_API_KEY` | Chave de API da Steam Web | (vazio) |
+| `SWAGGER_ENABLED` | Ativa/Desativa documentação do Swagger | `true` |
+| `ALLOWED_ORIGIN` | Origem permitida para o CORS (ex: URL do Frontend) | `http://localhost:3000` |
+
+### Frontend (`.env.local`)
+| Variável | Descrição | Exemplo |
+| :--- | :--- | :--- |
+| `NEXT_PUBLIC_API_URL` | URL base do backend para as requisições de API | `http://localhost:8080` |
 
 ---
 
@@ -68,30 +95,31 @@
 - PostgreSQL
 - Chave da [Steam Web API](https://steamcommunity.com/dev)
 
-### Backend
+### Backend (Local)
 
-```bash
-# Configure o banco de dados e a API key
-cp steam-stats-backend/steam-stats-backend/src/main/resources/application.properties.example \
-   steam-stats-backend/steam-stats-backend/src/main/resources/application.properties
-# Edite o arquivo com suas credenciais
-
-# Execute com Maven
-cd steam-stats-backend/steam-stats-backend
-./mvnw spring-boot:run
-```
-
-O backend será iniciado em `http://localhost:8080`.
+1. Configure as variáveis de ambiente necessárias (como `STEAM_API_KEY` e credenciais de banco de dados, caso diferirem dos padrões) ou edite o arquivo `application.properties` diretamente.
+2. Execute com Maven:
+   ```bash
+   cd steam-stats-backend/steam-stats-backend
+   ./mvnw spring-boot:run
+   ```
+   O backend será iniciado em `http://localhost:8080`.
+   
+   A documentação do Swagger UI pode ser acessada em `http://localhost:8080/swagger-ui/index.html`.
 
 ### Frontend
 
-```bash
-cd steam-stats-front
-npm install
-npm run dev
-```
-
-O frontend será iniciado em `http://localhost:3000`.
+1. Configure a URL da API no arquivo `.env.local` na raiz da pasta do frontend:
+   ```bash
+   echo "NEXT_PUBLIC_API_URL=http://localhost:8080" > steam-stats-front/.env.local
+   ```
+2. Instale as dependências e inicie o servidor:
+   ```bash
+   cd steam-stats-front
+   npm install
+   npm run dev
+   ```
+   O frontend será iniciado em `http://localhost:3000`.
 
 ---
 
