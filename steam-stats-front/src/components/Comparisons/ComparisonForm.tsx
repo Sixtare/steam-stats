@@ -35,7 +35,7 @@ export function ComparisonForm({
             </p>
           )}
 
-          <form onSubmit={onSubmit} className="flex flex-col md:flex-row gap-4 md:gap-5">
+          <form onSubmit={onSubmit} className="flex flex-col lg:flex-row gap-4 lg:gap-5">
             <div className="relative grow">
               <span className="absolute left-4 top-3 material-symbols-outlined text-secondary/50">id_card</span>
               <input
@@ -50,7 +50,7 @@ export function ComparisonForm({
             <button
               type="submit"
               disabled={loading}
-              className="bg-secondary text-secondary-900 px-10 py-3 rounded-lg font-display-lg text-[20px] font-bold uppercase tracking-wider hover:bg-secondary-fixed transition-all active:scale-95 shadow-[0_0_20px_rgba(130,207,255,0.3)] hover:shadow-[0_0_35px_rgba(130,207,255,0.5)] disabled:opacity-50"
+              className="w-1/2 min-w-fit self-center lg:w-auto lg:self-auto bg-secondary text-secondary-900 px-6 py-3 lg:px-10 lg:py-3 rounded-lg font-display-lg text-[13px] sm:text-[14px] lg:text-[20px] font-bold uppercase tracking-wider hover:bg-secondary-fixed transition-all active:scale-95 shadow-[0_0_20px_rgba(130,207,255,0.3)] hover:shadow-[0_0_35px_rgba(130,207,255,0.5)] disabled:opacity-50 whitespace-nowrap"
             >
               {loading ? (
                 <span className="flex items-center gap-2">
@@ -71,9 +71,9 @@ export function ComparisonForm({
           </form>
 
           {/* Hint text */}
-          <div className="mt-4 text-center flex items-center justify-center gap-2">
-            <span className="material-symbols-outlined text-[16px] text-tertiary">info</span>
-            <span className="font-label-code text-[12px] text-on-surface-variant opacity-60">Example: https://steamcommunity.com/profiles/76561198000000000/</span>
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-2 text-center">
+            <span className="material-symbols-outlined text-[16px] text-tertiary shrink-0">info</span>
+            <span className="font-label-code text-[12px] text-on-surface-variant opacity-60 break-all">Example: https://steamcommunity.com/profiles/76561198000000000/</span>
           </div>
         </div>
       </div>
