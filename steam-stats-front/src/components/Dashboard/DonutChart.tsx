@@ -49,7 +49,6 @@ export function DonutChart({
             stroke="var(--color-surface)"
             strokeWidth={2}
             isAnimationActive={showAnimation}
-            activeIndex={-1}
           >
             {data.map((entry, i) => {
               const color = donutColorMap[colors[i % colors.length]] || defaultColors[i % defaultColors.length];
