@@ -1,6 +1,7 @@
 "use client";
 
 function formatHours(h: number): string {
+  if (h < 1) return "<1";
   return h.toLocaleString();
 }
 
@@ -15,6 +16,16 @@ export function SharedLibraryChart({
   playerName1: string;
   playerName2: string;
 }) {
+  const placeholderCount = Math.max(0, 5 - compareHours.length);
+  const placeholders = placeholderCount > 0
+    ? Array.from({ length: placeholderCount }, (_, i) => ({
+        appid: -(i + 1),
+        name: "No games in common",
+        player1_hours: 0,
+        player2_hours: 0,
+      }))
+    : [];
+
   return (
     <section
       className="animate-slide-left col-span-12 lg:col-span-8 glass-card rounded-xl p-6"
@@ -35,28 +46,31 @@ export function SharedLibraryChart({
         </div>
       </div>
       <div className="space-y-4">
-        {compareHours.map((game) => {
+        {[...compareHours, ...placeholders].map((game) => {
+          const isPlaceholder = game.appid < 0;
           const total = game.player1_hours + game.player2_hours;
           const w1 = total > 0 ? (game.player1_hours / total) * 100 : 0;
           const w2 = total > 0 ? (game.player2_hours / total) * 100 : 0;
           const truncName = game.name.length > 24 ? game.name.slice(0, 24) + "..." : game.name;
           return (
-            <div key={game.appid} className="space-y-1">
+            <div key={game.appid} className={`space-y-1 ${isPlaceholder ? "opacity-40" : ""}`}>
               <div className="flex justify-between font-label-code text-xs text-on-surface-variant">
                 <span>{truncName}</span>
                 <span>
-                  {formatHours(game.player1_hours)}h vs {formatHours(game.player2_hours)}h
+                  {isPlaceholder ? "—" : `${formatHours(game.player1_hours)}h vs ${formatHours(game.player2_hours)}h`}
                 </span>
               </div>
               <div className="h-2 w-full bg-surface-container rounded-full overflow-hidden flex">
                 <div
-                  className="h-full bg-secondary-container shadow-[0_0_8px_rgba(0,125,173,0.5)]"
-                  style={{ width: `${w1}%` }}
+                  className={`h-full ${isPlaceholder ? "bg-outline-variant" : "bg-secondary-container shadow-[0_0_8px_rgba(0,125,173,0.5)]"}`}
+                  style={{ width: isPlaceholder ? "100%" : `${w1}%` }}
                 ></div>
-                <div
-                  className="h-full bg-tertiary-container shadow-[0_0_8px_rgba(209,188,255,0.5)]"
-                  style={{ width: `${w2}%` }}
-                ></div>
+                {!isPlaceholder && (
+                  <div
+                    className="h-full bg-tertiary-container shadow-[0_0_8px_rgba(209,188,255,0.5)]"
+                    style={{ width: `${w2}%` }}
+                  ></div>
+                )}
               </div>
             </div>
           );

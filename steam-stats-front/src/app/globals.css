@@ -117,3 +117,10 @@ body {
 }
 
 @source "../node_modules/@tremor/react";
+
+/* Recharts click focus outline fix */
+.recharts-wrapper:focus,
+.recharts-wrapper *:focus {
+  outline: none;
+}
+
