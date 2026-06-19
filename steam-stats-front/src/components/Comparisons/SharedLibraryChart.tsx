@@ -26,6 +26,22 @@ export function SharedLibraryChart({
       }))
     : [];
 
+  const sortedCompareHours = [...compareHours].sort((a, b) => {
+    const totalA = a.player1_hours + a.player2_hours;
+    const totalB = b.player1_hours + b.player2_hours;
+
+    const evennessA = totalA > 0 ? (2 * Math.min(a.player1_hours, a.player2_hours)) / totalA : 0;
+    const evennessB = totalB > 0 ? (2 * Math.min(b.player1_hours, b.player2_hours)) / totalB : 0;
+
+    const scoreA = evennessA * Math.log(totalA + 1);
+    const scoreB = evennessB * Math.log(totalB + 1);
+
+    if (Math.abs(scoreA - scoreB) < 0.0001) {
+      return totalB - totalA;
+    }
+    return scoreB - scoreA;
+  });
+
   return (
     <section
       className="animate-slide-left col-span-12 lg:col-span-8 glass-card rounded-xl p-6"
@@ -46,7 +62,7 @@ export function SharedLibraryChart({
         </div>
       </div>
       <div className="space-y-4">
-        {[...compareHours, ...placeholders].map((game) => {
+        {[...sortedCompareHours, ...placeholders].map((game) => {
           const isPlaceholder = game.appid < 0;
           const total = game.player1_hours + game.player2_hours;
           const w1 = total > 0 ? (game.player1_hours / total) * 100 : 0;
