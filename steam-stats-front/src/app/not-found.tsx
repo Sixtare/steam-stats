@@ -35,7 +35,7 @@ export default function NotFound() {
 
         {/* System Info Logs */}
         <div className="mt-10 font-label-code text-[10px] text-on-surface-variant/40 space-y-1">
-          <p>&gt; ERR_CODE: VAPOR_NULL_PTR</p>
+          <p>&gt; ERR_CODE: STEAM_NULL_PTR</p>
           <p>&gt; TRACE: 0xDEADBEEF // SEGMENT_FAULT</p>
           <p>&gt; STATUS: DRIFTING_IN_VOID</p>
         </div>

@@ -271,7 +271,13 @@ export default function Home() {
       </main>
 
       {/* Bottom Navigation (Mobile) */}
-      <BottomNav activeView={activeView} setActiveView={navigateToView} />
+      {activeView !== "login" && (
+        <BottomNav
+          activeView={activeView}
+          setActiveView={navigateToView}
+          onHome={() => navigateToView("login")}
+        />
+      )}
     </>
   );
 }

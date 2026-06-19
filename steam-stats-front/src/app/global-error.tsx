@@ -41,11 +41,11 @@ export default function GlobalError({
             SYSTEM MALFUNCTION - CONNECTION INTERRUPTED
           </h3>
           <p className="font-body-lg text-base text-on-surface-variant max-w-md mx-auto mb-10 opacity-80">
-            A critical error has occurred in the VAPOR_STATS system. Our technicians have been alerted.
+            A critical error has occurred in the STEAM_STATS system. Our technicians have been alerted.
           </p>
 
           <div className="mt-10 font-label-code text-[10px] text-on-surface-variant/40 space-y-1">
-            <p>&gt; ERR_CODE: {error.digest ? `0x${error.digest}` : "VAPOR_CRITICAL"}</p>
+            <p>&gt; ERR_CODE: {error.digest ? `0x${error.digest}` : "STEAM_CRITICAL"}</p>
             <p>&gt; TRACE: 0xDEADBEEF // SEGMENT_FAULT</p>
             <p>&gt; STATUS: SYSTEM_RECOVERY_IN_PROGRESS</p>
           </div>

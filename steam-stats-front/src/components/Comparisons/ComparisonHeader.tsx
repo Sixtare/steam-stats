@@ -57,15 +57,15 @@ export function ComparisonHeader({
 
   return (
     <div
-      className="animate-slide-left glass-card rounded-xl p-6 flex flex-col md:flex-row items-center justify-between relative overflow-hidden"
+      className="animate-slide-left glass-card rounded-xl p-6 flex flex-col lg:flex-row items-center justify-between gap-6 relative overflow-hidden"
       style={{ animationDelay: "100ms" }}
     >
       <div className="scanline absolute top-0 left-0 w-full h-0.5 opacity-50"></div>
 
       {/* Player 1 */}
-      <div className="flex items-center gap-4 flex-1">
-        <div className="relative">
-          <div className="w-35 h-35 rounded-full border-4 border-secondary overflow-hidden shadow-[0_0_20px_rgba(130,207,255,0.3)]">
+      <div className="flex flex-col sm:flex-row items-center gap-4 flex-1 w-full text-center sm:text-left justify-center sm:justify-start">
+        <div className="relative shrink-0">
+          <div className="w-20 h-20 sm:w-24 sm:h-24 lg:w-32 lg:h-32 rounded-full border-4 border-secondary overflow-hidden shadow-[0_0_20px_rgba(130,207,255,0.3)] shrink-0">
             <img
               alt={`${player1.profile.name || "Player 1"} Avatar`}
               className="w-full h-full object-cover"
@@ -81,7 +81,7 @@ export function ComparisonHeader({
           <p className="font-label-code text-[14px] text-on-surface-variant">
             Lvl {player1.profile.level ?? "?"} &bull; {player1.totalGames || "?"} games
           </p>
-          <div className="flex gap-4 mt-1">
+          <div className="flex gap-4 mt-1 justify-center sm:justify-start">
             <span className="font-label-code text-[15px] text-secondary/70">
               {formatHours(player1.totalHours ?? 0)}h total
             </span>
@@ -91,8 +91,8 @@ export function ComparisonHeader({
       </div>
 
       {/* Compatibility Score */}
-      <div className="flex flex-col items-center justify-center">
-        <div className="relative flex items-center justify-center" style={{ width: "12rem", height: "12rem" }}>
+      <div className="flex flex-col items-center justify-center shrink-0">
+        <div className="relative flex items-center justify-center w-28 h-28 sm:w-36 sm:h-36 lg:w-44 lg:h-44">
           <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 100 100">
             <circle cx="50" cy="50" r="40" fill="none" stroke="#1b2838" strokeWidth="8" />
             <circle
@@ -109,35 +109,21 @@ export function ComparisonHeader({
             />
           </svg>
           <div className="text-center relative z-10">
-            <span className="block font-display-lg text-5xl text-secondary leading-none">
+            <span className="block font-display-lg text-3xl sm:text-4xl lg:text-5xl text-secondary leading-none">
               {count.toFixed(0)}%
             </span>
-            <span className="block font-label-code text-xs text-on-surface-variant uppercase tracking-widest">
+            <span className="block font-label-code text-[10px] sm:text-xs text-on-surface-variant uppercase tracking-widest">
               Match
             </span>
           </div>
         </div>
-        <p className="mt-2 font-label-code text-xs text-secondary text-center">COSINE VECTOR MATCH: {count.toFixed(1)}%</p>
+        <p className="mt-2 font-label-code text-[10px] sm:text-xs text-secondary text-center">COSINE VECTOR MATCH: {count.toFixed(1)}%</p>
       </div>
 
       {/* Player 2 */}
-      <div className="flex items-center gap-4 flex-1 justify-end text-right">
-        <div>
-          <h2 className="font-headline-lg text-2xl text-tertiary">{player2.profile.name || "Player 2"}</h2>
-          <p className="font-label-code text-[14px] text-on-surface-variant">
-            Lvl {player2.profile.level ?? "?"} &bull; {player2.totalGames || "?"} games
-          </p>
-          <div className="flex gap-4 mt-1 justify-end">
-            <span className="font-label-code text-[15px] text-secondary/70">
-              {formatHours(player2.totalHours ?? 0)}h total
-            </span>
-            <span className="font-label-code text-[15px] text-tertiary/70">
-              ${(player2.totalPrice ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} library
-            </span>
-          </div>
-        </div>
-        <div className="relative">
-          <div className="w-35 h-35 rounded-full border-4 border-tertiary overflow-hidden shadow-[0_0_20px_rgba(209,188,255,0.3)]">
+      <div className="flex flex-col sm:flex-row-reverse items-center gap-4 flex-1 w-full text-center sm:text-right justify-center sm:justify-start lg:justify-end">
+        <div className="relative shrink-0">
+          <div className="w-20 h-20 sm:w-24 sm:h-24 lg:w-32 lg:h-32 rounded-full border-4 border-tertiary overflow-hidden shadow-[0_0_20px_rgba(209,188,255,0.3)] shrink-0">
             <img
               alt={`${player2.profile.name || "Player 2"} Avatar`}
               className="w-full h-full object-cover"
@@ -147,6 +133,20 @@ export function ComparisonHeader({
           <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-tertiary text-on-tertiary px-2 py-0.5 rounded font-label-code text-[10px] uppercase">
             Rival
           </span>
+        </div>
+        <div>
+          <h2 className="font-headline-lg text-2xl text-tertiary">{player2.profile.name || "Player 2"}</h2>
+          <p className="font-label-code text-[14px] text-on-surface-variant">
+            Lvl {player2.profile.level ?? "?"} &bull; {player2.totalGames || "?"} games
+          </p>
+          <div className="flex gap-4 mt-1 justify-center sm:justify-end">
+            <span className="font-label-code text-[15px] text-secondary/70">
+              {formatHours(player2.totalHours ?? 0)}h total
+            </span>
+            <span className="font-label-code text-[15px] text-tertiary/70">
+              ${(player2.totalPrice ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} library
+            </span>
+          </div>
         </div>
       </div>
     </div>
