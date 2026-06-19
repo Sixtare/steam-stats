@@ -28,7 +28,7 @@ export default function RootLayout({
         {children}
         <footer className="text-center opacity-40 mt-8 mb-8 md:ml-64">
           <p className="font-label-code text-xs text-on-surface-variant">
-            &copy; 2026 STEAM_STATS_INTEL // ENCRYPTION: ACTIVE
+            2026 STEAM_STATS_INTEL // ENCRYPTION: ACTIVE
           </p>
         </footer>
       </body>

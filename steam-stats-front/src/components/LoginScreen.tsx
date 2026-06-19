@@ -93,11 +93,11 @@ export function LoginScreen({ steamIdInput, setSteamIdInput, loading, error, fet
           {/* Card 2 */}
           <div className="glass-card p-6 rounded-lg group transition-all hover:shadow-[0_0_20px_rgba(130,207,255,0.4)] hover:border-secondary/80">
             <div className="flex justify-between items-start mb-3">
-              <span className="material-symbols-outlined text-secondary" style={{ fontVariationSettings: "'FILL' 1" }}>military_tech</span>
-              <span className="font-label-code text-[12px] text-tertiary">ACHIEVEMENTS</span>
+              <span className="material-symbols-outlined text-secondary" style={{ fontVariationSettings: "'FILL' 1" }}>compare_arrows</span>
+              <span className="font-label-code text-[12px] text-tertiary">COMPARE</span>
             </div>
-            <h3 className="font-display-lg text-[20px] text-on-surface mb-1">Pro Milestones</h3>
-            <p className="font-body-sm text-[14px] text-on-surface-variant">Track rare unlocks and compare global rarity percentages.</p>
+            <h3 className="font-display-lg text-[20px] text-on-surface mb-1">Compare Stats</h3>
+            <p className="font-body-sm text-[14px] text-on-surface-variant">Stack your playtime, library value, and top genres side-by-side with friends and rivals.</p>
           </div>
           
           {/* Card 3 */}
