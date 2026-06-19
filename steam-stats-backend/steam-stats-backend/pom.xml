@@ -74,6 +74,10 @@
 			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
 			<version>3.0.2</version>
 		</dependency>
+		<dependency>
+			<groupId>io.github.resilience4j</groupId>
+			<artifactId>resilience4j-spring-boot4</artifactId>
+			<version>2.4.0</version> </dependency>
 		<!-- Google Cloud Postgres Socket Dependancy -->
 <!--		<dependency>-->
 <!--			<groupId>com.google.cloud.sql</groupId>-->

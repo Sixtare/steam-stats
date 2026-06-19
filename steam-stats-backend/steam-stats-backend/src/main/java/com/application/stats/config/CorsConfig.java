@@ -1,4 +1,4 @@
-package com.application.stats;
+package com.application.stats.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;

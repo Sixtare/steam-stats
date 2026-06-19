@@ -1,6 +1,5 @@
 package com.application.stats.controller;
 
-import com.application.stats.dtos.Player;
 import com.application.stats.service.PlayerService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
