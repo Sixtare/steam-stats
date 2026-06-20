@@ -118,7 +118,7 @@ export function LoginScreen({ steamIdInput, setSteamIdInput, loading, error, fet
           alt="Nebula" 
           className="w-full h-full object-cover" 
           style={{ WebkitMaskImage: 'linear-gradient(to top, transparent, black)', maskImage: 'linear-gradient(to top, transparent, black)' }} 
-          src="https://lh3.googleusercontent.com/aida-public/AB6AXuDgZAoy7BvWtWrbUYwyoOZ4qaB86VmRWYzEHaPkKnGWfyZRfT8o-FmKi6dWDVrBFr0069aQY0FFgFSK1kWD8HhF-FCz5A9pAgV3OcOAXzf7uPTAXh9wlWgCH7gh2Nu2xtH4vGAaP4m_S8WeSx6EZHAxMgvODcuILv4pYHylGNr0KcV_M_2BztoJW2II8s3tuj6P5eMbPni3SuFOfpbg0T9rbp_7a-2oXBLCKGlRELoD6ud_i4SQaRjZOJKL1bstIcQcpbkZj2SjVEo"
+          src="/galaxy-bg.png"
         />
       </div>
     </div>
