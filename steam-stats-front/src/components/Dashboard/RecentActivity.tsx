@@ -13,7 +13,7 @@ export function RecentActivity({ recentGames, onSync }: { recentGames: any, onSy
         </div>
         <div className="flex-1 space-y-8">
           {recentGames.length === 0 ? (
-            <div className="text-on-surface-variant italic h-full flex items-center justify-center">Nenhuma atividade recente registrada nas últimas 2 semanas.</div>
+            <div className="text-on-surface-variant italic h-full flex items-center justify-center">No recent activity registered in the last two weeks.</div>
           ) : recentGames.map((game: any, i: number) => {
             const colorClasses = [
               {

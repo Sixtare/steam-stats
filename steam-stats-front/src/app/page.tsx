@@ -39,6 +39,11 @@ export default function Home() {
     return () => window.removeEventListener("popstate", handlePopState);
   }, []);
 
+  // Scroll to top when active view changes
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [activeView]);
+
   const navigateToView = useCallback((view: "login" | "dashboard" | "library" | "comparisons") => {
     if (navigatingBack.current) {
       navigatingBack.current = false;
@@ -78,7 +83,7 @@ export default function Home() {
         try {
           const errJson = await profileRes.json();
           if (errJson && errJson.error) errorMsg = errJson.error;
-        } catch {}
+        } catch { }
         throw new Error(errorMsg);
       }
 
@@ -99,7 +104,7 @@ export default function Home() {
       let gamesList: any = [];
       if (!gamesRes.ok) {
         let errorMsg = "Invalid Steam profile URL or ID.";
-        try { const errJson = await gamesRes.json(); if (errJson && errJson.error) errorMsg = errJson.error; } catch {}
+        try { const errJson = await gamesRes.json(); if (errJson && errJson.error) errorMsg = errJson.error; } catch { }
         throw new Error(errorMsg);
       }
       try { gamesList = await gamesRes.json(); } catch { throw new Error("Player profile is not public."); }
@@ -113,7 +118,7 @@ export default function Home() {
         throw new Error("Player profile is not public.");
       }
       let lastPlayedList: any[] = [];
-      try { lastPlayedList = lastPlayedRes.ok ? await lastPlayedRes.json() : []; } catch {}
+      try { lastPlayedList = lastPlayedRes.ok ? await lastPlayedRes.json() : []; } catch { }
 
       const allGamesList = gamesList.games;
       const gameCount = gamesList.game_count;
@@ -171,9 +176,9 @@ export default function Home() {
           name: g.name,
           value: Math.round(g.playtime_forever / 60)
         }));
-        
+
       const totalPlaytimeHoursRounded = totalHours || 0;
-        
+
       const recentGames = (Array.isArray(lastPlayedList) ? lastPlayedList : []).slice(0, 3).map((g: any) => ({
         name: g.name,
         playtime2w: (g.playtime_2weeks / 60).toFixed(1),
@@ -214,7 +219,7 @@ export default function Home() {
   return (
     <>
       <div className="nebula-glow"></div>
-      
+
       {/* Side Navigation (Web) — always visible */}
       <Sidebar
         profile={data?.profile}
@@ -229,7 +234,7 @@ export default function Home() {
 
       {/* Main Content Canvas */}
       <main className="md:ml-64 p-0 md:p-0 overflow-x-hidden">
-        
+
         {activeView === "login" && (
           <LoginScreen
             steamIdInput={steamIdInput}
